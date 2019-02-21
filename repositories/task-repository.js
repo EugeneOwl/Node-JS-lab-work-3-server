@@ -28,6 +28,16 @@ class TaskRepository {
             throw error;
         }
     }
+
+    async deleteTasks(identifiers) {
+        try {
+            console.log('REMOVE: ', identifiers);
+            return await Task.remove({_id: {$in: identifiers}});
+        } catch(error) {
+            console.log(`Error when deleting tasks by identifiers ${identifiers} to database: `, error);
+            throw error;
+        }
+    }
 }
 
 const taskRepository = new TaskRepository();

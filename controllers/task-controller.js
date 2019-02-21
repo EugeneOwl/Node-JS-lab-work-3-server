@@ -1,21 +1,24 @@
 import {taskService as service} from '../services/task-service'
+import { TASKS_BASE_URL, TASKS_SEARCH_URL } from "../routes/routes";
 
 class TaskController {
 
-    async showAllTasks(request, response) {
+    async showAllTasks(socket) {
         const tasks = await service.getAllTasks();
-        return response.send(tasks);
+        socket.emit(TASKS_BASE_URL, tasks);
     }
 
-    async searchTasks(request, response) {
-        const tasks = await service.getAllTasksBySearch(request.query['search']);
-        return response.send(tasks);
+    async searchTasks(socket, data) {
+        const tasks = await service.getAllTasksBySearch(data);
+        socket.emit(TASKS_SEARCH_URL, tasks);
     }
 
-    async addTask(request, response) {
-        const filename = request.file ? request.file.filename : '';
-        const savedTask = await service.addTask(request.body, filename);
-        response.send(savedTask);
+    async addTask(data) {
+        await service.addTask(data);
+    }
+
+    async deleteTasks(data) {
+        await service.deleteTasks(data);
     }
 }
 
